@@ -87,6 +87,7 @@ userRouter.get(
   (req, res) => {
     res.clearCookie("access-token");
     res.status(200).json({
+      user: { username: "" },
       message: { msgBody: "User has been logged out" },
       success: true,
     });

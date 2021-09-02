@@ -1,18 +1,24 @@
 import React, { useContext } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import AuthService from "../../services/AuthService";
 
 export const Navbar = () => {
   //global isAuthenticated state and setter extracted from context
-  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, setIsAuthenticated, setActiveUser } =
+    useContext(AuthContext);
 
   //history constant initialized to use methods on history hook
   const history = useHistory();
 
   //function to logout the user by setting isAuthenticated global state to false
-  const logout = () => {
-    setIsAuthenticated(false);
-    history.push("/login");
+  const logout = async () => {
+    const data = await AuthService.logout();
+    if (data.success) {
+      setActiveUser(data.user);
+      setIsAuthenticated(false);
+      history.push("/login");
+    }
   };
 
   //Navbar links to be returned if global isAuthenticated state is true

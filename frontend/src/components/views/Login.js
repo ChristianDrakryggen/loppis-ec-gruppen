@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import AuthService from "../../services/AuthService";
 
 export const Login = () => {
   //local state to keep the username and password for signing in
-  const [user, setUser] = useState({ username: "", password: "" });
+  const [userState, setUserState] = useState({ username: "", password: "" });
 
   //global setters for isAuthenticated and activeUser states extracted from context
   const { setIsAuthenticated, setActiveUser } = useContext(AuthContext);
@@ -14,16 +15,20 @@ export const Login = () => {
 
   //Function that fires on the input fields onChange events, setting the user state to an object containing the values of the input fields
   const changeUserData = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    setUserState({ ...userState, [e.target.name]: e.target.value });
   };
 
   //Function that runs on submission of form, setting the global authenticated state to true,
   //the global activeUser state to the local state user object, and redirects user to the account route
-  const loginUser = (e) => {
+  const loginUser = async (e) => {
     e.preventDefault();
-    setIsAuthenticated(true);
-    setActiveUser(user);
-    history.push("/account");
+    const data = await AuthService.login(userState);
+    const { isAuthenticated, user } = data;
+    if (isAuthenticated) {
+      setIsAuthenticated(isAuthenticated);
+      setActiveUser(user);
+      history.push("/account");
+    }
   };
 
   return (

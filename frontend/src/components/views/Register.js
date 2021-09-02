@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import AuthService from "../../services/AuthService";
 
 export const Register = () => {
   //local state to keep the username and password for registering
@@ -14,10 +15,13 @@ export const Register = () => {
   };
 
   //Function that runs on submission of form, alerting the user state object and pushing the user to the login route
-  const registerNewUser = (e) => {
+  const registerNewUser = async (e) => {
     e.preventDefault();
-    alert("Registered: " + JSON.stringify(user));
-    history.push("/login");
+    const data = await AuthService.register(user);
+    const { message } = data;
+    if (!message.msgError) {
+      history.push("/login");
+    }
   };
 
   return (
