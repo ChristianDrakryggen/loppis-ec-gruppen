@@ -10,10 +10,19 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  products: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
 });
 
 //Run this function before every save
 UserSchema.pre("save", function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
   bcrypt.hash(this.password, 10, (err, passwordHashed) => {
     if (err) {
       return next(err);

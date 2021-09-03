@@ -5,15 +5,17 @@ import { Account } from "./components/views/Account";
 import { Login } from "./components/views/Login";
 import { Register } from "./components/views/Register";
 import { Navbar } from "./components/general/Navbar";
+import { PrivateRoute } from "./hocs/PrivateRoute";
+import { UnPrivateRoute } from "./hocs/UnPrivateRoute";
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Route exact path="/" component={Home} />
-      <Route path="/account" component={Account} />
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
+      <PrivateRoute path="/account" component={Account} />
+      <UnPrivateRoute path="/login" component={Login} />
+      <UnPrivateRoute path="/register" component={Register} />
     </Router>
   );
 }

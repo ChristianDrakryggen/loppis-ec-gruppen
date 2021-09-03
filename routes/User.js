@@ -4,6 +4,7 @@ const passport = require("passport");
 const passportConfig = require("../passport");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Product = require("../models/Product");
 
 //Function to create our json webtoken
 const signToken = (userId) => {
@@ -18,6 +19,8 @@ const signToken = (userId) => {
     }
   );
 };
+
+//-----------REGISTRATION, AUTHENTICATION, AUTHORIZATION-------------------//
 
 //Save new user to db
 userRouter.post("/register", (req, res) => {
@@ -91,6 +94,64 @@ userRouter.get(
       message: { msgBody: "User has been logged out" },
       success: true,
     });
+  }
+);
+
+//-----------PRODUCTS-------------------//
+
+userRouter.post(
+  "/newproduct",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const product = new Product(req.body);
+    product.save((err) => {
+      if (err) {
+        res.status(500).json({
+          message: { msgBody: "An error occured", msgError: true },
+        });
+      } else {
+        req.user.products.push(product);
+        req.user.save((err) => {
+          if (err) {
+            res.status(500).json({
+              message: { msgBody: "An error occured", msgError: true },
+            });
+          } else {
+            res.status(200).json({
+              message: {
+                msgBody: "Successfully added product",
+                msgError: false,
+              },
+              isAuthenticated: true,
+            });
+          }
+        });
+      }
+    });
+  }
+);
+
+userRouter.get(
+  "/getproducts",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.findById({ _id: req.user.id })
+      .populate("products")
+      .exec((err, user) => {
+        if (err) {
+          res.status(500).json({
+            message: { msgBody: "An error occured", msgError: true },
+          });
+        } else {
+          res
+            .status(200)
+            .json({
+              products: user.products,
+              isAuthenticated: true,
+              msgError: false,
+            });
+        }
+      });
   }
 );
 
