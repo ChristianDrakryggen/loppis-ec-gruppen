@@ -11,7 +11,16 @@ const ProductService = {
         };
       }
     } catch (error) {
-      return { error: error };
+      return { error };
+    }
+  },
+  getPublicProducts: async (id) => {
+    try {
+      const res = await fetch(`/public/getuserproducts/${id}`);
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      return { error };
     }
   },
   newProduct: async (product) => {
@@ -32,7 +41,27 @@ const ProductService = {
         };
       }
     } catch (error) {
-      return { error: error };
+      return { error };
+    }
+  },
+  removeProduct: async (id) => {
+    try {
+      const res = await fetch(`/user/removeproduct/${id}`, {
+        method: "post",
+      });
+      if (res.status !== 401) {
+        const data = await res.json();
+        return data;
+      } else {
+        return {
+          message: {
+            msgBody: "Unauthorized to remove product",
+            msgError: true,
+          },
+        };
+      }
+    } catch (error) {
+      return { error };
     }
   },
 };

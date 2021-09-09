@@ -19,6 +19,9 @@ mongoose.connect(
 const userRouter = require("./routes/User");
 app.use("/user", userRouter);
 
+const publicRouter = require("./routes/Public");
+app.use("/public", publicRouter);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server is running on ${PORT}`));

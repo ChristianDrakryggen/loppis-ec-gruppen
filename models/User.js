@@ -10,6 +10,21 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  storename: {
+    type: String,
+  },
+  firstname: {
+    type: String,
+  },
+  lastname: {
+    type: String,
+  },
+  phone: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
   products: [
     {
       type: mongoose.Schema.Types.ObjectId,

@@ -41,6 +41,16 @@ export const Products = (props) => {
     });
   };
 
+  const removeProduct = async (id) => {
+    const data = await ProductService.removeProduct(id);
+    if (data) {
+      const data = await ProductService.getProducts();
+      if (data) {
+        setProducts(data.products);
+      }
+    }
+  };
+
   useEffect(() => {
     getProducts();
   }, []);
@@ -89,6 +99,7 @@ export const Products = (props) => {
             <p style={{ fontWeight: "bold" }}>{product.name}</p>
             <p>{`${product.price} kr`}</p>
             <p>{product.description}</p>
+            <button onClick={() => removeProduct(product._id)}>Remove</button>
           </div>
         ))}
       </div>

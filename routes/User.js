@@ -76,10 +76,11 @@ userRouter.get(
   "/authenticated",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { _id, username } = req.user;
+    const { _id, username, storename, firstname, lastname, email, phone } =
+      req.user;
     res.status(200).json({
       isAuthenticated: true,
-      user: { _id, username },
+      user: { _id, username, storename, firstname, lastname, email, phone },
     });
   }
 );
@@ -94,6 +95,34 @@ userRouter.get(
       message: { msgBody: "User has been logged out" },
       success: true,
     });
+  }
+);
+
+//-----------USERINFO-------------------//
+
+userRouter.put(
+  "/updateuser",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { storename, firstname, lastname, email, phone } = req.body;
+    User.findByIdAndUpdate(
+      req.user._id,
+      { storename, firstname, lastname, email, phone },
+      (err) => {
+        if (err) {
+          res
+            .status(500)
+            .json({ message: { msgBody: "An error occured", msgError: true } });
+        } else {
+          res.status(200).json({
+            message: {
+              msgBody: "Successfully updated user info",
+              msgError: false,
+            },
+          });
+        }
+      }
+    );
   }
 );
 
@@ -143,15 +172,35 @@ userRouter.get(
             message: { msgBody: "An error occured", msgError: true },
           });
         } else {
-          res
-            .status(200)
-            .json({
-              products: user.products,
-              isAuthenticated: true,
-              msgError: false,
-            });
+          res.status(200).json({
+            products: user.products,
+            isAuthenticated: true,
+            msgError: false,
+          });
         }
       });
+  }
+);
+
+userRouter.post(
+  "/removeproduct/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    req.user.products.pull({ _id: req.params.id });
+    req.user.save((err) => {
+      if (err) {
+        res.status(500).json({
+          message: { msgBody: "An error occured", msgError: true },
+        });
+      } else {
+        res.status(200).json({
+          message: {
+            msgBody: "Successfully removed product",
+            msgError: false,
+          },
+        });
+      }
+    });
   }
 );
 
