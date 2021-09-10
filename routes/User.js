@@ -55,6 +55,7 @@ userRouter.post("/register", (req, res) => {
   });
 });
 
+//login user
 userRouter.post(
   "/login",
   passport.authenticate("local", { session: false }),
@@ -72,6 +73,7 @@ userRouter.post(
   }
 );
 
+//check if user is authenticated
 userRouter.get(
   "/authenticated",
   passport.authenticate("jwt", { session: false }),
@@ -85,6 +87,7 @@ userRouter.get(
   }
 );
 
+//logout user
 userRouter.get(
   "/logout",
   passport.authenticate("jwt", { session: false }),
@@ -100,6 +103,7 @@ userRouter.get(
 
 //-----------USERINFO-------------------//
 
+//update non required user info
 userRouter.put(
   "/updateuser",
   passport.authenticate("jwt", { session: false }),
@@ -128,6 +132,7 @@ userRouter.put(
 
 //-----------PRODUCTS-------------------//
 
+//add new product
 userRouter.post(
   "/newproduct",
   passport.authenticate("jwt", { session: false }),
@@ -160,6 +165,7 @@ userRouter.post(
   }
 );
 
+//get products for logged in user
 userRouter.get(
   "/getproducts",
   passport.authenticate("jwt", { session: false }),
@@ -182,6 +188,7 @@ userRouter.get(
   }
 );
 
+//remove product
 userRouter.post(
   "/removeproduct/:id",
   passport.authenticate("jwt", { session: false }),

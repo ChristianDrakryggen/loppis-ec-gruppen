@@ -8,6 +8,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 
+//sets up connection to db
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost:27017/new-ec-group-loppis-db",
   { useNewUrlParser: true, useUnifiedTopology: true, autoIndex: true },
@@ -16,9 +17,11 @@ mongoose.connect(
   }
 );
 
+//private user routes
 const userRouter = require("./routes/User");
 app.use("/user", userRouter);
 
+//public routes
 const publicRouter = require("./routes/Public");
 app.use("/public", publicRouter);
 

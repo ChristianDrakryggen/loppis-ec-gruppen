@@ -2,6 +2,7 @@ const express = require("express");
 const publicRouter = express.Router();
 const User = require("../models/User");
 
+//get all users
 publicRouter.get("/getallusers", (req, res) => {
   User.find({}).exec((err, users) => {
     if (err) {
@@ -14,6 +15,7 @@ publicRouter.get("/getallusers", (req, res) => {
   });
 });
 
+//get specific user with a populated products array
 publicRouter.get("/getuserproducts/:id", (req, res) => {
   User.findById({ _id: req.params.id })
     .populate("products")

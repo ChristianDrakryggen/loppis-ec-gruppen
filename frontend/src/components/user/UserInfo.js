@@ -3,7 +3,10 @@ import UserService from "../../services/UserService";
 import { AuthContext } from "../../context/AuthContext";
 
 export const UserInfo = () => {
+  //breaks out global states and setters from auth context
   const { activeUser, setActiveUser } = useContext(AuthContext);
+
+  //state containing userInfo to be sent to backend/rendered on client
   const [userInfo, setUserInfo] = useState({
     storename: "",
     firstname: "",
@@ -12,12 +15,15 @@ export const UserInfo = () => {
     phone: "",
   });
 
+  //boolean state to see if form is open or closed
   const [addingUserInfo, setAddingUserInfo] = useState(false);
 
+  //function that sets the userInfo state properties to whatever is supplied by the user
   const handleInput = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
   };
 
+  //function that sends the userinfo state to the backend for update and sets the global active user properties to the userinfo state properties
   const updateUser = async (e) => {
     e.preventDefault();
     const data = await UserService.updateUser(userInfo);
@@ -34,6 +40,7 @@ export const UserInfo = () => {
     }
   };
 
+  //useEffect that runs setUserinfo every time the form opens/closes (addinguserinfo changes) to populate the input fields with the activeusers properties
   useEffect(() => {
     setUserInfo({
       ...userInfo,
